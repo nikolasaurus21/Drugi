@@ -1,41 +1,50 @@
-﻿
-public interface IStartCar
-{
-     public void Start();
-}
+using Microsoft.Extensions.DependencyInjection;
 
-public class StartCar : IStartCar
+namespace Drugi
 {
-    public void Start()
+    public interface IStartCar
     {
-        Console.WriteLine("paljenje auta");
-    }
-} 
-
-public class RunCar
-{
-    private IStartCar _car;
-    public RunCar(IStartCar car)
-    {
-        _car = car;
+        public void Start();
     }
 
-    public void Run()
+    public class StartCar : IStartCar
     {
-        Console.WriteLine("auto je upaljeno mozete krenuti");
+        public void Start()
+        {
+            Console.WriteLine("paljenje auta");
+        }
     }
-}
 
-class Program
-{
-    public static async Task Main(string[] args)
+    public class RunCar
     {
-        var startovanje = new StartCar();
-        var pokretanje = new RunCar(startovanje);
-        startovanje.Start();
-        await Task.Delay(2500);
-        pokretanje.Run();
+        private IStartCar _car;
+        public RunCar(IStartCar car)
+        {
+            _car = car;
+        }
+
+        public void Run()
+        {
+            Console.WriteLine("auto je upaljeno mozete krenuti");
+        }
+    }
+
+    class Program
+    {
+        public static async Task Main(string[] args)
+        {
+            var services = new ServiceCollection();
+            services.AddScoped<IStartCar, StartCar>();
+
+            //services.AddSingleton<IStartCar, RunCar>();
+            
+            var startovanje = new StartCar();
+            var pokretanje = new RunCar(startovanje);
+            startovanje.Start();
+            await Task.Delay(2500);
+            pokretanje.Run();
 
 
+        }
     }
 }
