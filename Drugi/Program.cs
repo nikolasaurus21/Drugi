@@ -15,15 +15,16 @@ namespace Drugi
         }
     }
 
-    public class RunCar
+    public class RunCar: IStartCar
     {
-        private IStartCar _car;
+        // morao sam ovo da maknem da bi mi scoped radio
+        /*private IStartCar _car;
         public RunCar(IStartCar car)
         {
             _car = car;
-        }
+        }*/
 
-        public void Run()
+        public void Start()
         {
             Console.WriteLine("auto je upaljeno mozete krenuti");
         }
@@ -33,17 +34,30 @@ namespace Drugi
     {
         public static async Task Main(string[] args)
         {
+            
             var services = new ServiceCollection();
             services.AddScoped<IStartCar, StartCar>();
 
-            services.BuildServiceProvider();
-            //IServiceProvider serviceProvider = services.BuildServiceProvider();
+            //
+            services.AddScoped<IStartCar, RunCar>();
+            //
+
+            //services.BuildServiceProvider();
+
+           
+
+            IServiceProvider serviceProvider = services.BuildServiceProvider();
+            serviceProvider.GetService<StartCar>();
+            serviceProvider.GetService<RunCar>();
+
             
-            var startovanje = new StartCar();
-            var pokretanje = new RunCar(startovanje);
-            startovanje.Start();
             await Task.Delay(2500);
-            pokretanje.Run();
+            
+
+            //var startovanje = new StartCar();
+            //var pokretanje = new RunCar(startovanje);
+            //startovanje.Start();
+            //pokretanje.Run();
 
 
         }
