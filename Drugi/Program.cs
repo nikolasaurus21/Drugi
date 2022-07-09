@@ -36,7 +36,8 @@ namespace Drugi
             var services = new ServiceCollection();
             services.AddScoped<IStartCar, StartCar>();
 
-            //services.AddSingleton<IStartCar, RunCar>();
+            services.BuildServiceProvider();
+            //IServiceProvider serviceProvider = services.BuildServiceProvider();
             
             var startovanje = new StartCar();
             var pokretanje = new RunCar(startovanje);
