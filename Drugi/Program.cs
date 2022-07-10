@@ -4,60 +4,68 @@ namespace Drugi
 {
     public interface IStartCar
     {
-        public void Start();
+        public void Start(int i)
+        {
+
+        }
+        
+
+        
     }
 
     public class StartCar : IStartCar
     {
-        public void Start()
+        void Start(int i)
         {
-            Console.WriteLine("paljenje auta");
+            Console.WriteLine($"odbroravanje {i}");
         }
     }
 
-    public class RunCar: IStartCar
+    public interface IRunCar
     {
-        // morao sam ovo da maknem da bi mi scoped radio
-        /*private IStartCar _car;
+        public void Run()
+        {
+
+        }
+       
+    }
+    public class RunCar: IRunCar
+    {
+        
+        private readonly IStartCar _car;
         public RunCar(IStartCar car)
         {
             _car = car;
-        }*/
+        }
 
-        public void Start()
+         public void Run()
         {
-            Console.WriteLine("auto je upaljeno mozete krenuti");
+            for (int i = 0; i < 5; i++)
+            {
+                _car.Start(i);
+            }
         }
     }
-
+    
     class Program
     {
         public static async Task Main(string[] args)
         {
-            
+
             var services = new ServiceCollection();
             services.AddScoped<IStartCar, StartCar>();
-
-            //
-            services.AddScoped<IStartCar, RunCar>();
-            //
-
-            //services.BuildServiceProvider();
-
-           
-
+            services.AddScoped<IRunCar, RunCar>();
             IServiceProvider serviceProvider = services.BuildServiceProvider();
-            serviceProvider.GetService<StartCar>();
-            serviceProvider.GetService<RunCar>();
+            var runCarService = serviceProvider.GetService<IRunCar>();
 
+            runCarService.Run();
             
             await Task.Delay(2500);
+
+            Console.WriteLine("kraj");
             
 
-            //var startovanje = new StartCar();
-            //var pokretanje = new RunCar(startovanje);
-            //startovanje.Start();
-            //pokretanje.Run();
+            
 
 
         }
