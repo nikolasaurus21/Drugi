@@ -7,23 +7,20 @@ namespace Drugi
         public void Start(int i)
         {
 
-        }
-        
-
-        
+        } 
     }
 
     public class StartCar : IStartCar
     {
-        void Start(int i)
+        public void Start(int i)
         {
-            Console.WriteLine($"odbroravanje {i}");
+            Console.WriteLine("odbroravanje {0}",i);
         }
     }
 
     public interface IRunCar
     {
-        public void Run()
+       public void Run()
         {
 
         }
@@ -33,6 +30,7 @@ namespace Drugi
     {
         
         private readonly IStartCar _car;
+
         public RunCar(IStartCar car)
         {
             _car = car;
@@ -47,17 +45,18 @@ namespace Drugi
         }
     }
     
+
     class Program
     {
         public static async Task Main(string[] args)
         {
 
             var services = new ServiceCollection();
-            services.AddScoped<IStartCar, StartCar>();
-            services.AddScoped<IRunCar, RunCar>();
+            services.AddSingleton<IStartCar, StartCar>();
+            services.AddSingleton<IRunCar, RunCar>();
             IServiceProvider serviceProvider = services.BuildServiceProvider();
-            var runCarService = serviceProvider.GetService<IRunCar>();
-
+            var runCarService = serviceProvider.GetRequiredService<IRunCar>();
+            
             runCarService.Run();
             
             await Task.Delay(2500);
